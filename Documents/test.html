@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+
+<title>Differences in Crime Between Seattle &amp; San Francisco</title>
+
+
+
+
+
+<style type="text/css">
+body, td {
+   font-family: sans-serif;
+   background-color: white;
+   font-size: 13px;
+}
+
+body {
+  max-width: 800px;
+  margin: auto;
+  padding: 1em;
+  line-height: 20px;
+}
+
+tt, code, pre {
+   font-family: 'DejaVu Sans Mono', 'Droid Sans Mono', 'Lucida Console', Consolas, Monaco, monospace;
+}
+
+h1 {
+   font-size:2.2em;
+}
+
+h2 {
+   font-size:1.8em;
+}
+
+h3 {
+   font-size:1.4em;
+}
+
+h4 {
+   font-size:1.0em;
+}
+
+h5 {
+   font-size:0.9em;
+}
+
+h6 {
+   font-size:0.8em;
+}
+
+a:visited {
+   color: rgb(50%, 0%, 50%);
+}
+
+pre, img {
+  max-width: 100%;
+}
+
+pre code {
+   display: block; padding: 0.5em;
+}
+
+code {
+  font-size: 92%;
+  border: 1px solid #ccc;
+}
+
+code[class] {
+  background-color: #F8F8F8;
+}
+
+table, td, th {
+  border: none;
+}
+
+blockquote {
+   color:#666666;
+   margin:0;
+   padding-left: 1em;
+   border-left: 0.5em #EEE solid;
+}
+
+hr {
+   height: 0px;
+   border-bottom: none;
+   border-top-width: thin;
+   border-top-style: dotted;
+   border-top-color: #999999;
+}
+
+@media print {
+   * {
+      background: transparent !important;
+      color: black !important;
+      filter:none !important;
+      -ms-filter: none !important;
+   }
+
+   body {
+      font-size:12pt;
+      max-width:100%;
+   }
+
+   a, a:visited {
+      text-decoration: underline;
+   }
+
+   hr {
+      visibility: hidden;
+      page-break-before: always;
+   }
+
+   pre, blockquote {
+      padding-right: 1em;
+      page-break-inside: avoid;
+   }
+
+   tr, img {
+      page-break-inside: avoid;
+   }
+
+   img {
+      max-width: 100% !important;
+   }
+
+   @page :left {
+      margin: 15mm 20mm 15mm 10mm;
+   }
+
+   @page :right {
+      margin: 15mm 10mm 15mm 20mm;
+   }
+
+   p, h2, h3 {
+      orphans: 3; widows: 3;
+   }
+
+   h2, h3 {
+      page-break-after: avoid;
+   }
+}
+</style>
+
+
+
+</head>
+
+<body>
+<h1>Differences in Crime Between Seattle &amp; San Francisco</h1>
+
+<h3>Matt Dixon</h3>
+
+<h3>Saturday, January 23, 2016</h3>
+
+<p>Seattle and San Francisco display very different profiles of crime when viewed as a weekly cycle.  Seattle crime is at its lowest on Fridays and the weekend, whereas San Francisco shows the opposite effect.</p>
+
+<p><img src="data:image/png;base64,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" alt="plot of chunk unnamed-chunk-1"/> </p>
+
+<p>This is in spite of a larger population in Seattle.  Wikipedia reports Seattle&#39;s population as likely to be 662,000 in the 2015 census, whereas San Francisco is reported to be 852,000 in July 2014.  I suggest that Seattle has a significant problem with crime, and am interested in what is driving the extremely high volumes of crime on Mondays and Tuesdays.</p>
+
+</body>
+
+</html>
