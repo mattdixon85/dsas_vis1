@@ -1,0 +1,84 @@
+# Differences in Crime Between Seattle & San Francisco
+### Matt Dixon
+### Saturday, January 23, 2016
+
+
+Seattle and San Francisco display very different profiles of crime when viewed as a weekly cycle.  Seattle crime is at its lowest on Fridays and the weekend, whereas San Francisco shows the opposite effect:
+
+```{r,echo=F}
+
+#knit2html('test.Rmd')
+
+library(ggplot2)
+
+sf <- read.csv('c:/users/matt/documents/courses/data_science_at_scale/datasci_course_materials/datasci_course_materials/assignment6/sanfrancisco_incidents_summer_2014.csv')
+se <- read.csv('c:/users/matt/documents/courses/data_science_at_scale/datasci_course_materials/datasci_course_materials/assignment6/seattle_incidents_summer_2014.csv')
+
+se$dayofweek <- factor(
+  strftime(strptime(se$Date.Reported,'%m/%d/%Y'),'%a')
+  ,levels=c('Mon','Tue','Wed','Thu','Fri','Sat','Sun')
+  ,ordered=T)
+sf$dayofweek <- factor(
+  strftime(strptime(sf$Date,'%m/%d/%Y'),'%a')
+  ,levels=c('Mon','Tue','Wed','Thu','Fri','Sat','Sun')
+  ,ordered=T)
+
+
+dow.df <- rbind(
+  data.frame(city='Seattle',table(se$dayofweek))
+  ,data.frame(city='SanFrancisco',table(sf$dayofweek))
+)
+
+names(dow.df) <- c('City','Weekday', 'Volume')
+p1 <- ggplot(dow.df)
+p1 + geom_line(aes(x=Weekday,y=Volume,group=City,colour=City)) + ylab('Reported Incidents')
+
+```
+
+
+This is in spite of a larger population in San Francisco.  Wikipedia reports Seattle's population as likely to be 662,000 in the 2015 census, up from 602,000 in 2010, whereas San Francisco is 852,000 in July 2014.  Crimes in the **Car Prowl**, **Vehicle Theft**, **Burglary** and **Other Property** categories appear to be driving the high volumes of crime in the early parts of the week:
+
+```{r, echo=F}
+
+library(plyr) # for arrange()
+se.top.off.descs <- arrange(data.frame(table(se$Summarized.Offense.Description)),desc(Freq))[1:20,]
+
+se.offc.dow <- with(
+  subset(se, Summarized.Offense.Description %in% se.top.off.descs$Var1)
+  ,table(as.character(Summarized.Offense.Description),dayofweek)
+)
+se.offc.dow2 <- melt(t(se.offc.dow))
+
+names(se.offc.dow2) <- c('Weekday','Summarized.Offense.Description','Volume')
+
+p2 <- ggplot(se.offc.dow2)
+p2 + geom_point(aes(Weekday,Volume,stat='identity')) + geom_line(aes(as.numeric(Weekday),Volume,stat='identity')) + facet_wrap(~Summarized.Offense.Description)
+
+```
+
+In San Francisco we see a different profile - total crime dominated by **Larceny/Theft** in the latter part of the week.  What is similar is for **Assault** to occur more frequently at the end of the week.
+
+
+```{r, echo =FALSE}
+
+sf$date2 <- substr(strptime(sf$Date,'%m/%d/%Y'),1,10)
+sf$dayofweek <- factor(strftime(sf$date2,'%a'), levels=c('Mon','Tue','Wed','Thu','Fri','Sat','Sun'), ordered=T)
+
+sf.top.off.descs <- arrange(data.frame(table(sf$Category)),desc(Freq))[1:20,]
+
+sf.offc.dow <- with(
+  subset(sf, Category %in% sf.top.off.descs$Var1)
+  ,table(as.character(Category),dayofweek)
+)
+sf.offc.dow2 <- melt(t(sf.offc.dow))
+
+names(sf.offc.dow2) <- c('Weekday','Category','Volume')
+
+p2 <- ggplot(sf.offc.dow2)
+p2 + geom_point(aes(Weekday,Volume,stat='identity')) + facet_wrap(~Category) + geom_line(aes(as.numeric(Weekday),Volume,stat='identity')) + facet_wrap(~Category)
+```
+
+This website also demonstrates Seattle's problems with property crime:  
+
+http://www.neighborhoodscout.com/wa/seattle/crime/  
+
